@@ -36,7 +36,6 @@ def requires_access_level(permissions):
   
             for permission in permissions:
                 if permission not in list_permissions_user:
-                    print(permission)
                     return jsonify({"error": "Você não tem permissão"}), 403
 
             return function_current(*args, **kwargs)

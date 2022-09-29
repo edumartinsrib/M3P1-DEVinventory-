@@ -39,7 +39,7 @@ def create_user(data, validate=True):
 
         return result
     except Exception as e:
-        return {"error": f"{e}", "status_code": 500}
+        return {"error": f"{e}"}
 
 
 def get_user_by_email(email):
@@ -47,8 +47,8 @@ def get_user_by_email(email):
         user_query = User.query.filter_by(email=email).first_or_404()
         result = user_share_schema.dump(user_query)
         return result
-    except:
-        return {"error": "Algo deu errado!", "status_code": 500}
+    except Exception as e:
+        return {"error": f"{e}"}
 
 
 def get_user_by_id(id):

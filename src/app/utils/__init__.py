@@ -70,5 +70,4 @@ def excludeNone(dict):
 def format_date(str_date):
     date_object = datetime.strptime(str_date, '%d/%m/%Y')
     date_object = date_object.isoformat()
-    print(date_object)
     return str(date_object)
