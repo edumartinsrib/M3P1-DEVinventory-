@@ -27,9 +27,9 @@ def test_post_user_success(client, logged_in_client):
 def test_post_user_with_email_already_exists(client, logged_in_client):
     """Test of the post user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
-    response = client.post("/user/", headers=headers, json=payload)
     payload_test = payload.copy()
     payload_test["email"] = "joao@email.com"
+    response = client.post("/user/", headers=headers, json=payload_test)
     
     if response.status_code == 400 and response.json:
         assert response.json["error"] == "{'email': ['Email já registrado']}"
