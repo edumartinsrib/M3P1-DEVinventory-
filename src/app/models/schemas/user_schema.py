@@ -29,7 +29,9 @@ class UserCreateSchema(Schema):
     
     @pre_load
     def format_data(self, data, **kwargs):
-        data["age"] = format_date(data["age"])
+        if 'age' in data:
+            data['age'] = format_date(data['age'])
+            return data
         return data
    
     @validates("city_id")
