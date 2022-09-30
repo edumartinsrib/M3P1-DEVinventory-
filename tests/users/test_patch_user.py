@@ -1,5 +1,3 @@
-import json
-
 
 payload = {
         "city_id": 1566,
