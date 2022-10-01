@@ -75,3 +75,16 @@ def test_patch_user_with_email_registered(client, logged_in_client):
     
     if response.status_code == 400 and response.json:
         assert response.json["error"] == "{'email': ['Email já registrado']}"
+        
+def test_patch_user_fail_without_permission(client, logged_in_client_with_user_read):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client_with_user_read}"}
+    payload_test = payload.copy()
+    payload_test["email"] = "joao@email.com"
+    response = client.patch(f"/user/{1}", headers=headers, json=payload_test)
+    
+    if response.status_code == 403 and response.json:
+        assert "Você não tem permissão" in response.json["error"]
+    else:
+        assert False
+        
