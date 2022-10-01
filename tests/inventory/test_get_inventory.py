@@ -151,3 +151,60 @@ def test_get_inventory_by_id_fail(client, logged_in_client):
     response = client.get(url, headers=headers)
 
     assert response.status_code == 404
+
+
+def test_get_inventory_fields_returned(client, logged_in_client):
+    """Test of the user route with a name that exists in the database"""
+    list_result_keys = {
+        "id": int,
+        "product_code": int,
+        "title": str,
+        "brand": str,
+        "template": str,
+        "description": str,
+        "value": float,
+        "product_category": str,
+        "user": {"name": str, "id": int},
+    }
+    url = f"/inventory/1"
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    response = client.get(url, headers=headers)
+
+    if response.status_code == 200 and response.json:
+        for key in list_result_keys:
+            if key == "user":
+                for key_user in list_result_keys[key]:
+                    assert key_user in response.json["Dados"][key]
+            else:
+                assert key in response.json["Dados"]
+
+
+def test_get_inventory_result_type_of_data(client, logged_in_client):
+    """Test of the user route with a name that exists in the database"""
+    list_result_keys = {
+        "id": int,
+        "product_code": int,
+        "title": str,
+        "brand": str,
+        "template": str,
+        "description": str,
+        "value": float,
+        "product_category": str,
+        "user": {"name": str, "id": int},
+    }
+    url = f"/inventory/2"
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    response = client.get(url, headers=headers)
+
+    if response.status_code == 200 and response.json:
+        for key in list_result_keys:
+            if key == "user":
+                for key_user in list_result_keys[key]:
+                    assert (
+                        type(response.json["Dados"][key][key_user])
+                        == list_result_keys[key][key_user]
+                    )
+            else:
+                assert type(response.json["Dados"][key]) == list_result_keys[key]
+
+
