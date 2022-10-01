@@ -143,3 +143,11 @@ def test_get_inventory_by_id_success(client, logged_in_client):
 
     if response.status_code == 200 and response.json:
         assert response.json["Status"] == "Sucesso"
+
+def test_get_inventory_by_id_fail(client, logged_in_client):
+    """Test of the user route with a name that exists in the database"""
+    url = f"/inventory/100000"
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    response = client.get(url, headers=headers)
+
+    assert response.status_code == 404
