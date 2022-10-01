@@ -51,6 +51,14 @@ def test_post_with_invalid_token(client, logged_in_client):
 
     assert response.status_code == 403
 
+def test_post_with_invalid_permission_user(client, logged_in_client_with_user_read):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client_with_user_read}"}
+    response = client.post("/user/", headers=headers, json=payload)
+    
+    if response.status_code == 403 and response.json:
+        assert "Você não tem permissão" in response.json["error"]
+
 
 def test_post_with_invalid_payload(client, logged_in_client):
     """Test of the post user route with an invalid payload - without required fields"""
