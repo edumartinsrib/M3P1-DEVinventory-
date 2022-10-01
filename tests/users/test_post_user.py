@@ -21,7 +21,7 @@ keys_requireds = [
     "email",
     "password",
 ]
-keys_not_requireds = ["cep", "street", "district", "number_street", "phone"]
+keys_not_requireds = ["cep", "street", "district", "number_street", "phone", "age"]
 
 
 def test_post_user_success(client, logged_in_client):
