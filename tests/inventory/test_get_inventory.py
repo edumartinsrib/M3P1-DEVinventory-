@@ -144,6 +144,7 @@ def test_get_inventory_by_id_success(client, logged_in_client):
     if response.status_code == 200 and response.json:
         assert response.json["Status"] == "Sucesso"
 
+
 def test_get_inventory_by_id_fail(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = f"/inventory/100000"
@@ -208,3 +209,12 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
                 assert type(response.json["Dados"][key]) == list_result_keys[key]
 
 
+def test_get_inventory_download_template_url(client, logged_in_client):
+    """Test of the user route with a name that exists in the database"""
+    url = f"/inventory/2"
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    response = client.get(url, headers=headers)
+    url_validate = response.json["Dados"]["template"]
+
+    if response.status_code == 200 and response.json:
+        assert url_validate[:8] == "https://"
