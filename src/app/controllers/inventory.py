@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, abort, jsonify, request
 
 from src.app import DB
@@ -13,73 +15,9 @@ inventory = Blueprint("inventory", __name__, url_prefix="/inventory")
 @inventory.route("/", methods=["POST"])
 @requires_access_level(["WRITE"])
 def add_new_product():
-    """Example endpoint post in the database an inventory
-    This is using docstrings for specifications.
-    ---
-    parameters:
-      - name: product_category_id
-        in: body
-        type: interger
-        required: true
-      - name: user_id
-        in: body
-        type: interger
-        required: false
-	default: None
-      - name: product_code
-        in: body
-        type: interger
-        required: true
-      - name: title
-        in: body
-        type: string
-        required: true
-      - name: value
-        in: body
-        type: float
-        required: true
-      - name: brand
-        in: body
-        type: string
-        required: true
-      - name: template
-        in: body
-        type: string
-        required: true
-      - name: description
-        in: body
-        type: string
-        required: true
-    definitions:
-      id:
-        type: interget
-      product_category_id: 
-        type: interger
-      user_id:
-        type: interger
-      title: 
-        type: string
-      product_code:
-        type: interger
-      value:
-        type: interger
-      brand:
-        type: string
-      template:
-        type: string
-      description:
-        type: string
-    responses:
-        201:
-            description: Sucesso
-        400:
-            description: Invalido
-        403:
-            description: Error permission
-    """
     data = request.get_json()
     response = create_product(data)
-    
+
     if "error" in response:
         return jsonify(response), 400
 
@@ -89,41 +27,6 @@ def add_new_product():
 @inventory.route("/", methods=["GET"])
 @requires_access_level(["READ"])
 def get_product_by_user_name():
-    """Example endpoint get in the database an inventory
-    This is using docstrings for specifications.
-    ---
-    parameters:
-      - name: name
-        in: body
-        type: string
-        required: true
-    definitions:
-      id:
-        type: interget
-      product_category_id: 
-        type: interger
-      user_id:
-        type: interger
-      title: 
-        type: string
-      product_code:
-        type: interger
-      value:
-        type: interger
-      brand:
-        type: string
-      template:
-        type: string
-      description:
-        type: string
-    responses:
-        200:
-            description: Sucesso
-        403:
-            description: Erro permission
-        204:
-            description: Error não encontrado
-    """
     page = request.args.get("page", 1, type=int)
     per_page = 20
 
@@ -136,7 +39,7 @@ def get_product_by_user_name():
             result.append(product.format())
 
         if not result:
-            return jsonify({"Status": "Dados não encontrados"}), 204
+            return json.dumps({"Status": "Dados não encontrados"}), 204
         else:
             return jsonify({"Status": "Sucesso", "Dados": result}), 200
     else:
@@ -151,7 +54,7 @@ def get_product_by_user_name():
             result.append(item.format())
 
         if not result:
-            return jsonify({"Status": "Dados não encontrados"}), 204
+            return json.dumps({"Status": "Dados não encontrados"}), 204
         else:
             return jsonify({"Status": "Sucesso", "Dados": result}), 200
 
@@ -159,34 +62,6 @@ def get_product_by_user_name():
 @inventory.route("/results", methods=["GET"])
 @requires_access_level(["READ"])
 def get_all_products():
-    """Example endpoint get in the database an inventory
-    This is using docstrings for specifications.
-    ---
-    definitions:
-      id:
-        type: interget
-      product_category_id: 
-        type: interger
-      user_id:
-        type: interger
-      title: 
-        type: string
-      product_code:
-        type: interger
-      value:
-        type: interger
-      brand:
-        type: string
-      template:
-        type: string
-      description:
-        type: string
-    responses:
-        200:
-            description: Sucesso
-        403:
-            description: Error permission
-    """
     products = Inventory.query.all()
     users = User.query.all()
 
@@ -210,74 +85,26 @@ def get_all_products():
 
 @inventory.route("/<int:id>", methods=["PATCH"])
 @requires_access_level(["UPDATE"])
-
 def patch_product(id):
-    """Example endpoint PATH in the database an inventory
-    This is using docstrings for specifications.
-    ---
-    parameters:
-      - name: id
-        in: body
-        type: interger
-        required: true
-      - name: user_id
-        in: body
-        type: interger
-        required: false
-	default: None
-      - name: title
-        in: body
-        type: string
-        required: false
-      - name: value
-        in: body
-        type: float
-        required: false
-      - name: brand
-        in: body
-        type: string
-        required: false
-      - name: template
-        in: body
-        type: string
-        required: false
-      - name: description
-        in: body
-        type: string
-        required: false
-    definitions:
-      id:
-        type: interget
-      product_category_id: 
-        type: interger
-      user_id:
-        type: interger
-      title: 
-        type: string
-      product_code:
-        type: interger
-      value:
-        type: interger
-      brand:
-        type: string
-      template:
-        type: string
-      description:
-        type: string
-    responses:
-        204:
-            description: No Content
-        400:
-            description: Invalido
-        403:
-            description: Error permission    
-    """
     if id is None or id == 0 or not request.json:
         abort(400)
     data = request.get_json()
     result = update_product(data, id)
-    
+
     if "error" in result:
         return jsonify(result), 400
-    
-    return jsonify({"status": "Produto atualizado com sucesso!", "Dados": result}), 204
+
+    return (
+        json.dumps({"status": "Produto atualizado com sucesso!", "Dados": result}),
+        204,
+    )
+
+@inventory.route("/<int:id>", methods=["GET"])
+@requires_access_level(["READ"])
+def get_product_by_id(id):
+    product = Inventory.query.filter_by(id=id).first()
+
+    if not product:
+        return jsonify({"Status": "Produto não encontrado"}), 404
+
+    return jsonify({"Status": "Sucesso", "Dados": product.format()}), 200
