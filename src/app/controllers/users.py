@@ -13,9 +13,14 @@ from werkzeug.utils import redirect
 from src.app import DB, MA
 from src.app.middlewares.auth import logged_in, requires_access_level
 from src.app.models.user import User, users_share_schema
-from src.app.services.users_service import (create_user, format_print_user,
-                                            get_user_by_email,
-                                            login_user, update_user)
+from src.app.services.users_service import (
+    create_role,
+    create_user,
+    format_print_user,
+    get_user_by_email,
+    login_user,
+    update_user,
+)
 from src.app.utils import exist_key, generate_jwt
 
 user = Blueprint("user", __name__, url_prefix="/user")
@@ -137,7 +142,7 @@ def get_user_by_name():
         users = users_share_schema.dump(pager.items)
         result = [format_print_user(result) for result in users]
 
-        return json.dumps({"Status": "Sucesso", "Dados": result}), 200
+        return jsonify({"Status": "Sucesso", "Dados": result}), 200
 
     user_query = User.query.filter(
         User.name.ilike("%" + request.args.get("name") + "%")
@@ -145,15 +150,11 @@ def get_user_by_name():
     user = users_share_schema.dump(user_query)
 
     if not user:
-        return Response(
-            response=json.dumps({"message": "Usuario nao encontrado."}),
-            status=204,
-            mimetype="application/json",
-        )
+        return json.dumps({"Status": "Erro", "Mensagem": "Usuário não encontrado"}), 204
 
     result = [format_print_user(result) for result in user]
 
-    return json.dumps({"Status": "Sucesso", "Dados": result}), 200
+    return jsonify({"Status": "Sucesso", "Dados": result}), 200
 
 
 @user.route("/<int:id>", methods=["PATCH"])
@@ -162,10 +163,20 @@ def update_user_by_id(id):
     data = request.get_json()
 
     response = update_user(data, id)
-    
+
     if "error" in response:
         return jsonify(response), response.get("status_code")
-      
+
     return jsonify(response), 204
-    
-    
+
+
+@user.route("/role", methods=["POST"])
+@requires_access_level(["WRITE"])
+def add_new_role():
+    data = request.get_json()
+    response = create_role(data)
+
+    if "error" in response:
+        return jsonify(response), 400
+
+    return jsonify(response), 201
