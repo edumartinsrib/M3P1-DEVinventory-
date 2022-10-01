@@ -171,7 +171,7 @@ def update_user_by_id(id):
 
 
 @user.route("/role", methods=["POST"])
-@requires_access_level(["WRITE"])
+@requires_access_level(["READ", "WRITE", "UPDATE", "DELETE"])
 def add_new_role():
     data = request.get_json()
     response = create_role(data)
