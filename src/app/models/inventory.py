@@ -56,6 +56,22 @@ class Inventory(DB.Model):
                 "name": self.user.name if self.user else "Na empresa",
                 "id": self.user.id if self.user else None,
             },
+    }
+        
+    def format_data_return(self):
+        return {
+            "id": self.id,
+            "product_code": self.product_code,
+            "title": self.title,
+            "brand": self.brand,
+            "template": self.template,
+            "description": self.description,
+            "value": self.value,
+            "product_category": self.product_category.name,
+            "user": {
+                "name": self.user.name if self.user else "Na empresa",
+                "id": self.user.id if self.user else None,
+            },
         }
 
 

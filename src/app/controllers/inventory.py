@@ -106,5 +106,5 @@ def get_product_by_id(id):
 
     if not product:
         return jsonify({"Status": "Produto não encontrado"}), 404
-
-    return jsonify({"Status": "Sucesso", "Dados": product.format()}), 200
+    
+    return jsonify({"Status": "Sucesso", "Dados": product.format_data_return()}), 200
