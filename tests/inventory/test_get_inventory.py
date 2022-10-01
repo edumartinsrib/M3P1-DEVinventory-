@@ -193,7 +193,7 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
         "product_category": str,
         "user": {"name": str, "id": int},
     }
-    url = f"/inventory/2"
+    url = f"/inventory/3"
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     response = client.get(url, headers=headers)
 
