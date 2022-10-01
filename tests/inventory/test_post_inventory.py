@@ -105,7 +105,7 @@ def test_post_inventory_fail_with_invalid_value_null(client, logged_in_client):
                 assert False
 
 
-def test_post_inventory_fail_with_invalud_value_negative(client, logged_in_client):
+def test_post_inventory_fail_with_invalid_value_negative(client, logged_in_client):
     """Test of the user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     for payload_config in payload_configs_and_types:
