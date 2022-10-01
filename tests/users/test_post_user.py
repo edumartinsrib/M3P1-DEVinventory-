@@ -178,3 +178,52 @@ def test_with_success_create_role(client, logged_in_client):
 
     assert response.status_code == 201
     assert response.json["status"] == "sucesso"
+
+def test_post_user_role_with_invalid_payload_create_role(client, logged_in_client):
+    """Test of the post user route with a valid token"""
+    fields_requireds = ["name", "description", "permissions"]
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    payload = {"name": "teste", "description": "teste02", "permissions": [1, 2, 3]}
+    for key in fields_requireds:
+        payload_test = payload.copy()
+        payload_test.pop(key)
+        response = client.post("/user/role", headers=headers, json=payload_test)
+        
+        if response.status_code == 400 and response.json:
+            assert response.json["error"] == f"{{'{key}': ['{key} é obrigatório.']}}"
+        else:
+            assert False
+
+def test_post_user_role_with_invalid_payload_create_role_permissions(client, logged_in_client):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    payload = {"name": "teste", "description": "teste02", "permissions": [1, 2, 3, 5, 6]}
+    response = client.post("/user/role", headers=headers, json=payload)
+    
+    if response.status_code == 400 and response.json:
+        assert "Permissão não encontrada" in response.json["error"]
+    else:
+        assert False
+
+def test_post_user_role_with_invalid_create_role_with_existing_name_and_description(client, logged_in_client):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    payload = {"name": "Administrador do Sistema", "description": "SYSTEM_ADMIN", "permissions": [1, 2, 3, 4]}
+    response = client.post("/user/role", headers=headers, json=payload)
+    
+    if response.status_code == 400 and response.json:
+        assert "Função já registrada" in response.json["error"]
+        assert "Descrição já registrada" in response.json["error"]
+    else:
+        assert False
+        
+def test_post_user_role_with_invalid_permission_user(client, logged_in_client_with_user_read):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client_with_user_read}"}
+    payload = {"name": "test", "description": "test", "permissions": [1, 2, 3]}
+    response = client.post("/user/role", headers=headers, json=payload)
+    
+    if response.status_code == 403 and response.json:
+        assert "Você não tem permissão" in response.json["error"]
+    else:
+        assert False
