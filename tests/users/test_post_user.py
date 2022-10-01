@@ -32,8 +32,19 @@ def test_post_user_success(client, logged_in_client):
 
     assert response.status_code == 201
 
+def test_post_success_without_not_requireds_fields(client, logged_in_client):
+    """Test of the post user route with a valid token"""
+    headers = {"Authorization": f"Bearer {logged_in_client}"}
+    payload_test = payload.copy()
+    for key in keys_not_requireds:
+        payload_test.pop(key)
+        payload_test["email"] = f"email{key}@email.com"
+    response = client.post("/user/", headers=headers, json=payload_test)
 
-def test_post_user_with_email_already_exists(client, logged_in_client):
+    assert response.status_code == 201
+
+
+def test_post_user_fail_with_email_already_exists(client, logged_in_client):
     """Test of the post user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -44,14 +55,14 @@ def test_post_user_with_email_already_exists(client, logged_in_client):
         assert response.json["error"] == "{'email': ['Email já registrado']}"
 
 
-def test_post_with_invalid_token(client, logged_in_client):
+def test_post_user_fail_invalid_token(client, logged_in_client):
     """Test of the post user route with an invalid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}123"}
     response = client.post("/user/", headers=headers, json=payload)
 
     assert response.status_code == 403
 
-def test_post_with_invalid_permission_user(client, logged_in_client_with_user_read):
+def test_post_user_fail_invalid_permission_user(client, logged_in_client_with_user_read):
     """Test of the post user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client_with_user_read}"}
     response = client.post("/user/", headers=headers, json=payload)
@@ -60,7 +71,7 @@ def test_post_with_invalid_permission_user(client, logged_in_client_with_user_re
         assert "Você não tem permissão" in response.json["error"]
 
 
-def test_post_with_invalid_payload(client, logged_in_client):
+def test_post_user_fail_invalid_payload(client, logged_in_client):
     """Test of the post user route with an invalid payload - without required fields"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     for key in keys_requireds:
@@ -74,19 +85,7 @@ def test_post_with_invalid_payload(client, logged_in_client):
             assert False
 
 
-def test_post_success_without_not_requireds_fields(client, logged_in_client):
-    """Test of the post user route with a valid token"""
-    headers = {"Authorization": f"Bearer {logged_in_client}"}
-    payload_test = payload.copy()
-    for key in keys_not_requireds:
-        payload_test.pop(key)
-        payload_test["email"] = f"email{key}@email.com"
-    response = client.post("/user/", headers=headers, json=payload_test)
-
-    assert response.status_code == 201
-
-
-def test_post_with_invalid_payload_password(client, logged_in_client):
+def test_post_user_fail_invalid_payload_password(client, logged_in_client):
     """Test of the post user route with an invalid payload - password"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -102,7 +101,7 @@ def test_post_with_invalid_payload_password(client, logged_in_client):
         assert False
 
 
-def test_with_invalid_payload_telephone(client, logged_in_client):
+def test_post_user_fail_with_invalid_payload_telephone(client, logged_in_client):
     """Test of the post user route with an invalid payload - telephone"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -111,11 +110,9 @@ def test_with_invalid_payload_telephone(client, logged_in_client):
 
     if response.status_code == 400 and response.json:
         assert response.json["error"] == "{'phone': ['Telefone inválido']}"
-    else:
-        assert False
 
 
-def test_with_invalid_payload_email(client, logged_in_client):
+def test_post_user_fail_with_invalid_payload_email(client, logged_in_client):
     """Test of the post user route with an invalid payload - email"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -124,11 +121,10 @@ def test_with_invalid_payload_email(client, logged_in_client):
 
     if response.status_code == 400 and response.json:
         assert response.json["error"] == "{'email': ['email inválido.']}"
-    else:
-        assert False
 
 
-def test_with_invalid_payload_age(client, logged_in_client):
+
+def test_post_user_fail_with_invalid_payload_age(client, logged_in_client):
     """Test of the post user route with an invalid payload - age"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -138,13 +134,12 @@ def test_with_invalid_payload_age(client, logged_in_client):
     if response.status_code == 400 and response.json:
         assert (
             response.json["error"]
-            == "time data '2000/01/01' does not match format '%d/%m/%Y'"
+            == f"time data '{payload_test['age']}' does not match format '%d/%m/%Y'"
         )
-    else:
-        assert False
 
 
-def test_with_invalid_payload_city_id(client, logged_in_client):
+
+def test_post_with_invalid_payload_city_id(client, logged_in_client):
     """Test of the post user route with an invalid payload - city_id"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -157,7 +152,7 @@ def test_with_invalid_payload_city_id(client, logged_in_client):
         assert False
 
 
-def test_with_invalid_payload_gender_id(client, logged_in_client):
+def test_post_with_invalid_payload_gender_id(client, logged_in_client):
     """Test of the post user route with an invalid payload"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = payload.copy()
@@ -170,7 +165,7 @@ def test_with_invalid_payload_gender_id(client, logged_in_client):
         assert False
 
 
-def test_with_success_create_role(client, logged_in_client):
+def test_post_user_role_with_success_create_role(client, logged_in_client):
     """Test of the post user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     payload_test = {"name": "teste", "description": "teste02", "permissions": [1, 2, 3]}
