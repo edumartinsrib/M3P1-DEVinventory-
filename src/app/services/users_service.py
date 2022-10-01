@@ -1,7 +1,8 @@
-import re
 from datetime import datetime, timedelta, timezone
 
+from src.app.models.permission import Permission
 from src.app.models.role import Role, role_share_schema
+from src.app.models.schemas.role_schema import user_validate_schema
 from src.app.models.schemas.user_schema import user_create_schema
 from src.app.models.user import User, user_share_schema
 from src.app.utils import excludeNone, generate_jwt
@@ -33,7 +34,7 @@ def create_user(data, validate=True):
     try:
         if validate:
             user_create_schema.load(data)
-        
+
         new_user = User.seed(data)
         result = user_share_schema.dump(new_user)
 
@@ -41,16 +42,32 @@ def create_user(data, validate=True):
     except Exception as e:
         return {"error": f"{e}"}
 
+
 def update_user(data, id):
-    list_keys = ["role_id", "gender_id", "city_id", "age", "name", "email", "phone", "password", "cep", "street", "district", "number_street", "complement", "landmark"]
+    list_keys = [
+        "role_id",
+        "gender_id",
+        "city_id",
+        "age",
+        "name",
+        "email",
+        "phone",
+        "password",
+        "cep",
+        "street",
+        "district",
+        "number_street",
+        "complement",
+        "landmark",
+    ]
     try:
         user = User.query.get(id)
         if not user:
             return {"error": "Usuário não encontrado!", "status_code": 404}
         validate_values_keys = validate_fields_nulls(data, list_keys)
-        if validate_values_keys is not None and 'error' in validate_values_keys:
+        if validate_values_keys is not None and "error" in validate_values_keys:
             return {"error": validate_values_keys["error"], "status_code": 400}
-        
+
         user_create_schema.load(data, partial=True)
         user.update(data)
         result = user_share_schema.dump(user)
@@ -107,3 +124,18 @@ def format_print_user(self):
         "phone": self["phone"],
         "role": role["name"],
     }
+
+
+def create_role(data):
+    try:
+        user_validate_schema.load(data)
+        roles = Permission.query.filter(Permission.id.in_(data["permissions"])).all()
+        results = []
+        for role in roles:
+            new_role = Role.seed(data["name"], data["description"], [role])
+            result = role_share_schema.dump(new_role)
+            results.append(result)
+
+        return {"status": "sucesso", "roles": results}
+    except Exception as e:
+        return {"error": f"{e}"}

@@ -12,16 +12,13 @@ def test_users_fail_with_invalid_token(client, logged_in_client):
 
 def test_user_success_with_name(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    name_teste = "João"
+    name_teste = "Pa"
     url = f"/user/?name={name_teste}"
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     response = client.get(url, headers=headers)
 
-    if response.status_code == 200 and response.json:
-        assert response.json["Dados"][0]["name"] == "João Victor"
-        assert response.json["Status"] == "Sucesso"
-    else:
-        assert False
+    assert response.status_code == 200
+    assert response.json["Status"] == "Sucesso"
 
 
 def test_user_fail_with_name_not_found(client, logged_in_client):
