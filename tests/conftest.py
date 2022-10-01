@@ -28,19 +28,35 @@ def logged_in_client(client):
   response = client.post("user/login", data=json.dumps(data), headers=headers)
   return response.json["token"]
 
+
 @pytest.fixture
-def logged_in_client_with_user_deleted(client):
+def logged_in_client_with_user_read(client):
   data = {
-      "email" : 'joao@email.com',
-      "password" : "senha"
+      "email" : "ana@email.com",
+      "password" : "Xyzw#123"
   }
 
   response = client.post("user/login", data=json.dumps(data), headers=headers)
-  user = User.query.filter(User.id == 33).first()
-  user.roles = []
-  DB.session.commit()
-  User.query.filter(User.id == 33).delete()
-  
+  return response.json["token"]
+
+@pytest.fixture
+def logged_in_client_with_user_write(client):
+  data = {
+      "email" : 'pablo@email.com',
+      "password" : "Dev&0001"
+  }
+
+  response = client.post("user/login", data=json.dumps(data), headers=headers)
+  return response.json["token"]
+
+@pytest.fixture
+def logged_in_client_with_user_patch(client):
+  data = {
+      "email" : 'juca@email.com',
+      "password" : "Toor&456"
+  }
+
+  response = client.post("user/login", data=json.dumps(data), headers=headers)
   return response.json["token"]
 
 @pytest.fixture(scope="function", autouse=True)
