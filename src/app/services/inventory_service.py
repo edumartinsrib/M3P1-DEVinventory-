@@ -7,9 +7,9 @@ def create_product(data):
         inventory_create_schema.load(data)
         inventory = Inventory.seed(data)
         result = inventory_share_schema.dump(inventory)
-        return result
+        return {"data": result, "status_code": 201}
     except Exception as e:
-        return {"error": f"{e}", "status_code": 500}
+        return {"error": f"{e}"}
 
 
 def update_product(data, id):
@@ -33,4 +33,4 @@ def update_product(data, id):
         result = inventory_share_schema.dump(product)
         return result
     except Exception as e:
-        return {"error": f"{e}", "status_code": 500}
+        return {"error": f"{e}"}

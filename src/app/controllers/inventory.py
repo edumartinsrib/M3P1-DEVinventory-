@@ -99,6 +99,7 @@ def patch_product(id):
         204,
     )
 
+
 @inventory.route("/<int:id>", methods=["GET"])
 @requires_access_level(["READ"])
 def get_product_by_id(id):
@@ -106,5 +107,5 @@ def get_product_by_id(id):
 
     if not product:
         return jsonify({"Status": "Produto não encontrado"}), 404
-    
+
     return jsonify({"Status": "Sucesso", "Dados": product.format_data_return()}), 200
