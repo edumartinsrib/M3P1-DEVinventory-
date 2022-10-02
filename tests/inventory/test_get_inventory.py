@@ -194,7 +194,7 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
         'product_category': str,
         'user': {'name': str, 'id': int},
     }
-    url = f'/inventory/3'
+    url = f'/inventory/10'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
