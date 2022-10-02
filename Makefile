@@ -11,7 +11,7 @@ db:
 	poetry run flask populate_db
 
 test:
-	poetry run pytest -s -v --cov-report term-missing --cov-report html --cov-branch \
+	poetry run pytest -v --cov-report term-missing --cov-report html --cov-branch \
 		--cov src/
 
 lint:
