@@ -70,8 +70,6 @@ for payload_config in payload_configs_and_types:
     payload_just_values_and_keys[payload_config["key"]] = payload_config["value"]
 
 
-
-
 def delete_keys_by_atribute(payload, atributo, valor):
     payload_deleted_keys = {}
     payload_base = [ payload_config for payload_config in payload_configs_and_types if payload_config["key"] in payload.keys() ]
