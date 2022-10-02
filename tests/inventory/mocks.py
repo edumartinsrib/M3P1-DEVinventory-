@@ -5,6 +5,7 @@ payload_configs_and_types = [
         "type": int,
         "required": True,
         "unique": False,
+        "patch": False,
     },
     {
         "key": "title",
@@ -12,6 +13,7 @@ payload_configs_and_types = [
         "type": str,
         "required": True,
         "unique": False,
+        "patch": True,
     },
     {
         "key": "product_code",
@@ -19,14 +21,23 @@ payload_configs_and_types = [
         "type": int,
         "required": True,
         "unique": True,
+        "patch": False,
     },
-    {"key": "user_id", "value": 1, "type": int, "required": False, "unique": False},
+    {
+        "key": "user_id",
+        "value": 1,
+        "type": int,
+        "required": False,
+        "unique": False,
+        "patch": True,
+    },
     {
         "key": "value",
         "value": 1169.00,
         "type": float,
         "required": True,
         "unique": False,
+        "patch": True,
     },
     {
         "key": "brand",
@@ -34,6 +45,7 @@ payload_configs_and_types = [
         "type": str,
         "required": True,
         "unique": False,
+        "patch": True,
     },
     {
         "key": "template",
@@ -41,6 +53,7 @@ payload_configs_and_types = [
         "type": str,
         "required": True,
         "unique": False,
+        "patch": True,
     },
     {
         "key": "description",
@@ -48,9 +61,25 @@ payload_configs_and_types = [
         "type": str,
         "required": True,
         "unique": False,
+        "patch": True,
     },
 ]
 
 payload_just_values_and_keys = {}
 for payload_config in payload_configs_and_types:
     payload_just_values_and_keys[payload_config["key"]] = payload_config["value"]
+
+
+
+
+def delete_keys_by_atribute(payload, atributo, valor):
+    payload_deleted_keys = {}
+    payload_base = [ payload_config for payload_config in payload_configs_and_types if payload_config["key"] in payload.keys() ]
+    payload_copy = payload.copy()
+    for payload_config in payload_base:
+        if payload_config[atributo] == valor:
+            del payload_copy[payload_config["key"]]
+        else: 
+            payload_deleted_keys[payload_config["key"]] = payload_config["value"]
+    
+    return payload_deleted_keys
