@@ -102,7 +102,7 @@ def test_get_inventory_success_with_item_in_user(client, logged_in_client):
                 break
 
 
-def test_get_inventory_with_item_in_user_keys_requireds(
+def test_get_inventory_success_with_item_in_user_keys_requireds(
     client, logged_in_client
 ):
     """Test of the user route with a name that exists in the database"""
@@ -121,7 +121,7 @@ def test_get_inventory_with_item_in_user_keys_requireds(
                 break
 
 
-def test_get_inventory_num_items_in_page(client, logged_in_client):
+def test_get_inventory_success_num_items_in_page(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = '/inventory/?page=1'
     response = client.get(url, headers=headers(logged_in_client))
@@ -130,7 +130,7 @@ def test_get_inventory_num_items_in_page(client, logged_in_client):
         assert len(response.json['Dados']) == 20
 
 
-def test_get_inventory_without_paginate(client, logged_in_client):
+def test_get_inventory_success_without_paginate(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = '/inventory/'
     response = client.get(url, headers=headers(logged_in_client))
@@ -139,7 +139,7 @@ def test_get_inventory_without_paginate(client, logged_in_client):
         assert len(response.json['Dados']) == 20
 
 
-def test_get_inventory_by_id_success(client, logged_in_client):
+def test_get_inventory_success_by_id_success(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = '/inventory/1'
     response = client.get(url, headers=headers(logged_in_client))
@@ -148,7 +148,7 @@ def test_get_inventory_by_id_success(client, logged_in_client):
         assert response.json['Status'] == 'Sucesso'
 
 
-def test_get_inventory_by_id_fail(client, logged_in_client):
+def test_get_inventory_fail_by_id_fail(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = '/inventory/100000'
     response = client.get(url, headers=headers(logged_in_client))
@@ -156,7 +156,7 @@ def test_get_inventory_by_id_fail(client, logged_in_client):
     assert response.status_code == 404
 
 
-def test_get_inventory_fields_returned(client, logged_in_client):
+def test_get_inventory_success_fields_returned(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     list_result_keys = {
         'id': int,
@@ -181,7 +181,7 @@ def test_get_inventory_fields_returned(client, logged_in_client):
                 assert key in response.json['Dados']
 
 
-def test_get_inventory_result_type_of_data(client, logged_in_client):
+def test_get_inventory_success_result_type_of_data(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     list_result_keys = {
         'id': int,
@@ -212,7 +212,7 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
                 )
 
 
-def test_get_inventory_download_template_url(client, logged_in_client):
+def test_get_inventory_success_download_template_url(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
     url = '/inventory/2'
     response = client.get(url, headers=headers(logged_in_client))
