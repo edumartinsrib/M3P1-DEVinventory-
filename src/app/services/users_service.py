@@ -131,10 +131,9 @@ def create_role(data):
         user_validate_schema.load(data)
         roles = Permission.query.filter(Permission.id.in_(data["permissions"])).all()
         results = []
-        for role in roles:
-            new_role = Role.seed(data["name"], data["description"], [role])
-            result = role_share_schema.dump(new_role)
-            results.append(result)
+        new_role = Role.seed(data["name"], data["description"], roles)
+        result = role_share_schema.dump(new_role)
+        results.append(result)
 
         return {"status": "sucesso", "roles": results}
     except Exception as e:
