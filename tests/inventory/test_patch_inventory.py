@@ -1,14 +1,5 @@
-from mocks import delete_keys_by_atribute, payload_just_values_and_keys
-
-configs = {
-    "url_base": "/inventory/",
-    "url_product_code": "/inventory/1",
-    "product_code": 1,
-}
-
-
-def headers(logged_in_client):
-    return {"Authorization": f"Bearer {logged_in_client}"}
+from mocks_inventory import (configs, delete_keys_by_atribute, headers,
+                             payload_just_values_and_keys)
 
 
 def test_patch_inventory_success_status_204(client, logged_in_client):

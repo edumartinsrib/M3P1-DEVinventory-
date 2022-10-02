@@ -65,6 +65,16 @@ payload_configs_and_types = [
     },
 ]
 
+configs = {
+    "url_base": "/inventory/",
+    "url_product_code": "/inventory/1",
+    "product_code": 1,
+}
+
+
+def headers(logged_in_client):
+    return {"Authorization": f"Bearer {logged_in_client}"}
+
 payload_just_values_and_keys = {}
 for payload_config in payload_configs_and_types:
     payload_just_values_and_keys[payload_config["key"]] = payload_config["value"]

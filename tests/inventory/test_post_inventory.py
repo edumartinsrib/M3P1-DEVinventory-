@@ -1,12 +1,5 @@
-from mocks import payload_configs_and_types, payload_just_values_and_keys
-
-configs = {
-    "url_base": "/inventory/",
-}
-
-
-def headers(logged_in_client):
-    return {"Authorization": f"Bearer {logged_in_client}"}
+from mocks_inventory import (configs, headers, payload_configs_and_types,
+                             payload_just_values_and_keys)
 
 
 def test_post_inventory_success_status_200(client, logged_in_client):
