@@ -45,7 +45,7 @@ def test_post_inventory_fail_with_invalid_payload(client, logged_in_client):
     assert response.status_code == 400
 
 
-def test_post_inventory_fail_without_fields_requireds(client, logged_in_client):
+def test_post_inventory_fail_missing_fields_requireds(client, logged_in_client):
     """Test of the user route with a valid token"""
     headers = {"Authorization": f"Bearer {logged_in_client}"}
     for payload_config in payload_configs_and_types:
