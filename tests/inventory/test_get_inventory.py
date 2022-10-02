@@ -201,11 +201,10 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
         for key in list_result_keys:
             if key == 'user':
                 for key_user in list_result_keys[key]:
-                    assert (
-                        type(response.json['Dados'][key][key_user])
-                        == list_result_keys[key][key_user]
-                        or 
-                        type(response.json['Dados'][key][key_user] is None)
+                    assert type(
+                        response.json['Dados'][key][key_user]
+                    ) == list_result_keys[key][key_user] or type(
+                        response.json['Dados'][key][key_user] is None
                     )
             else:
                 assert (
