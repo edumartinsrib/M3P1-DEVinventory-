@@ -10,13 +10,13 @@ def test_get_inventory_success_status_200(client, logged_in_client):
         assert response.json["Status"] == "Sucesso"
 
 
-def test_inventory_fail_with_invalid_token(client, logged_in_client):
+def test_get_inventory_fail_with_invalid_token(client, logged_in_client):
     """Test of the user route with an invalid token"""
     response = client.get("/inventory/results", headers=headers(f"{logged_in_client}123"))
 
     assert response.status_code == 403
 
-def test_inventory_results_success_status_200(client, logged_in_client):
+def test_get_inventory_results_success_status_200(client, logged_in_client):
     """Test of the user route with a valid token without parameter name"""
     response = client.get("/inventory/results", headers=headers(logged_in_client))
 
@@ -37,7 +37,7 @@ def test_get_inventory_success_with_name_filter(client, logged_in_client):
         assert response.json["Status"] == "Sucesso"
 
 
-def test_get_inventory_invalid_with_name_not_found(client, logged_in_client):
+def test_get_inventory_fail_invalid_with_name_not_found(client, logged_in_client):
     """Test of the user route with a name that does not exist in the database"""
     name_teste = "João123"
     url = f"/inventory/?name={name_teste}"

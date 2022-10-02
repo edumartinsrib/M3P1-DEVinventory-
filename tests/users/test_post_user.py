@@ -17,7 +17,7 @@ def test_post_user_fail_invalid_token(client, logged_in_client):
     assert response.status_code == 403
 
 
-def test_post_success_without_not_requireds_fields(client, logged_in_client):
+def test_post_user_success_without_not_requireds_fields(client, logged_in_client):
     """Test of the post user route with a valid token"""
     payload_test = payload.copy()
     for key in keys_not_requireds:
@@ -125,7 +125,7 @@ def test_post_user_fail_with_invalid_payload_age(client, logged_in_client):
         )
 
 
-def test_post_with_invalid_payload_city_id(client, logged_in_client):
+def test_post_user_fail_with_invalid_payload_city_id(client, logged_in_client):
     """Test of the post user route with an invalid payload - city_id"""
     payload_test = payload.copy()
     payload_test["city_id"] = "teste"
@@ -139,7 +139,7 @@ def test_post_with_invalid_payload_city_id(client, logged_in_client):
         assert False
 
 
-def test_post_with_invalid_payload_gender_id(client, logged_in_client):
+def test_post_user_fail_with_invalid_payload_gender_id(client, logged_in_client):
     """Test of the post user route with an invalid payload"""
     payload_test = payload.copy()
     payload_test["gender_id"] = 5
@@ -153,7 +153,7 @@ def test_post_with_invalid_payload_gender_id(client, logged_in_client):
         assert False
 
 
-def test_post_user_role_with_success_create_role(client, logged_in_client):
+def test_post_user_fail_role_with_success_create_role(client, logged_in_client):
     """Test of the post user route with a valid token"""
     payload_test = {"name": "teste", "description": "teste02", "permissions": [1, 2, 3]}
     response = client.post(
@@ -164,7 +164,7 @@ def test_post_user_role_with_success_create_role(client, logged_in_client):
     assert response.json["status"] == "sucesso"
 
 
-def test_post_user_role_with_invalid_payload_create_role(client, logged_in_client):
+def test_post_user_fail_role_with_invalid_payload_create_role(client, logged_in_client):
     """Test of the post user route with a valid token"""
     fields_requireds = ["name", "description", "permissions"]
     payload = {"name": "teste", "description": "teste02", "permissions": [1, 2, 3]}
@@ -181,7 +181,7 @@ def test_post_user_role_with_invalid_payload_create_role(client, logged_in_clien
             assert False
 
 
-def test_post_user_role_with_invalid_payload_create_role_permissions(
+def test_post_user_fail_role_with_invalid_payload_create_role_permissions(
     client, logged_in_client
 ):
     """Test of the post user route with a valid token"""
@@ -200,7 +200,7 @@ def test_post_user_role_with_invalid_payload_create_role_permissions(
         assert False
 
 
-def test_post_user_role_with_invalid_create_role_with_existing_name_and_description(
+def test_post_user_fail_role_with_invalid_create_role_with_existing_name_and_description(
     client, logged_in_client
 ):
     """Test of the post user route with a valid token"""
@@ -220,7 +220,7 @@ def test_post_user_role_with_invalid_create_role_with_existing_name_and_descript
         assert False
 
 
-def test_post_user_role_with_invalid_permission_user(
+def test_post_user_fail_role_with_invalid_permission_user(
     client, logged_in_client_with_user_read
 ):
     """Test of the post user route with a valid token"""
