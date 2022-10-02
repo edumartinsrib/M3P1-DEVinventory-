@@ -80,7 +80,7 @@ def test_get_inventory_fail_with_paginate_invalid(client, logged_in_client):
 
 def test_get_inventory_success_with_item_in_company(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/?page=1'
+    url = '/inventory/?page=1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -92,7 +92,7 @@ def test_get_inventory_success_with_item_in_company(client, logged_in_client):
 
 def test_get_inventory_success_with_item_in_user(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/?page=1'
+    url = '/inventory/?page=1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -106,7 +106,7 @@ def test_get_inventory_with_item_in_user_keys_requireds(
     client, logged_in_client
 ):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/?page=1'
+    url = '/inventory/?page=1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -123,7 +123,7 @@ def test_get_inventory_with_item_in_user_keys_requireds(
 
 def test_get_inventory_num_items_in_page(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/?page=1'
+    url = '/inventory/?page=1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -132,7 +132,7 @@ def test_get_inventory_num_items_in_page(client, logged_in_client):
 
 def test_get_inventory_without_paginate(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/'
+    url = '/inventory/'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -141,7 +141,7 @@ def test_get_inventory_without_paginate(client, logged_in_client):
 
 def test_get_inventory_by_id_success(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/1'
+    url = '/inventory/1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -150,7 +150,7 @@ def test_get_inventory_by_id_success(client, logged_in_client):
 
 def test_get_inventory_by_id_fail(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/100000'
+    url = '/inventory/100000'
     response = client.get(url, headers=headers(logged_in_client))
 
     assert response.status_code == 404
@@ -169,7 +169,7 @@ def test_get_inventory_fields_returned(client, logged_in_client):
         'product_category': str,
         'user': {'name': str, 'id': int},
     }
-    url = f'/inventory/1'
+    url = '/inventory/1'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -194,7 +194,7 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
         'product_category': str,
         'user': {'name': str, 'id': int},
     }
-    url = f'/inventory/10'
+    url = '/inventory/10'
     response = client.get(url, headers=headers(logged_in_client))
 
     if response.status_code == 200 and response.json:
@@ -214,7 +214,7 @@ def test_get_inventory_result_type_of_data(client, logged_in_client):
 
 def test_get_inventory_download_template_url(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
-    url = f'/inventory/2'
+    url = '/inventory/2'
     response = client.get(url, headers=headers(logged_in_client))
     url_validate = response.json['Dados']['template']
 

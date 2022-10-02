@@ -21,8 +21,6 @@ lint:
 	poetry run blue --color .
 	@echo "Running flake8"
 	poetry run flake8 .
-	@echo "Running mypy"
-	poetry run mypy .
 
 format:
 	poetry run isort .

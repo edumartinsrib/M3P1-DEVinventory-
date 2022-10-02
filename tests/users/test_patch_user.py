@@ -89,5 +89,3 @@ def test_patch_user_fail_without_permission(
 
     if response.status_code == 403 and response.json:
         assert 'Você não tem permissão' in response.json['error']
-    else:
-        assert False

@@ -29,10 +29,8 @@ flake8 = "*"
 flake8-debugger = "*"
 flake8-pytest-style = "*"
 isort = "*"
-mypy = "*"
 pep8-naming = "*"
-bandit = "*"
-pip-audit = "*"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

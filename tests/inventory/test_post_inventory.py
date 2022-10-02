@@ -15,9 +15,7 @@ def test_post_inventory_success_status_200(client, logged_in_client):
     )
 
     if response.status_code == 201 and response.json:
-        assert response.json['data'] != None
-    else:
-        assert False
+        assert response.json['data'] is not None
 
 
 def test_post_inventory_fail_user_not_authorized_status_403(
@@ -32,8 +30,6 @@ def test_post_inventory_fail_user_not_authorized_status_403(
 
     if response.status_code == 403 and response.json:
         assert 'Você não tem permissão' in response.json['error']
-    else:
-        assert False
 
 
 def test_post_inventory_fail_with_invalid_token(client, logged_in_client):
@@ -74,8 +70,6 @@ def test_post_inventory_fail_missing_fields_requireds(
 
             if response.status_code == 400 and response.json:
                 assert 'é obrigatório' in response.json['error']
-            else:
-                assert False
 
 
 def test_post_inventory_fail_with_type_wrong(client, logged_in_client):
@@ -92,8 +86,6 @@ def test_post_inventory_fail_with_type_wrong(client, logged_in_client):
 
             if response.status_code == 400 and response.json:
                 assert 'inválido' in response.json['error']
-            else:
-                assert False
 
 
 def test_post_inventory_fail_with_product_code_unique(
@@ -112,8 +104,6 @@ def test_post_inventory_fail_with_product_code_unique(
 
             if response.status_code == 400 and response.json:
                 assert 'já registrado' in response.json['error']
-            else:
-                assert False
 
 
 def test_post_inventory_fail_with_invalid_value_null(client, logged_in_client):
@@ -130,8 +120,6 @@ def test_post_inventory_fail_with_invalid_value_null(client, logged_in_client):
 
             if response.status_code == 400 and response.json:
                 assert 'inválido' in response.json['error']
-            else:
-                assert False
 
 
 def test_post_inventory_fail_with_invalid_value_negative(
@@ -150,5 +138,3 @@ def test_post_inventory_fail_with_invalid_value_negative(
 
             if response.status_code == 400 and response.json:
                 assert 'inválido' in response.json['error']
-            else:
-                assert False
