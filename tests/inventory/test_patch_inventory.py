@@ -26,7 +26,7 @@ def test_patch_inventory_fail_invalid_token(client, logged_in_client):
     response = client.patch(
         configs["url_base"],
         json=payload_just_values_and_keys,
-        headers=headers(logged_in_client),
+        headers=headers(f"{logged_in_client}123"),
     )
 
     response.status_code == 403
@@ -36,12 +36,15 @@ def test_patch_inventory_fail_without_permission(
     client, logged_in_client_with_user_read
 ):
     """Test of the user route with a valid token"""
+    payload_patch = delete_keys_by_atribute(
+        payload_just_values_and_keys, "patch", False
+    )
+
     response = client.patch(
         configs["url_base"],
-        json=payload_just_values_and_keys,
+        json=payload_patch,
         headers=headers(logged_in_client_with_user_read),
     )
-    print(response.json)
     assert response.status_code == 405
 
 
