@@ -2,7 +2,7 @@ from src.app import DB, MA
 
 
 class Product_Categories(DB.Model):
-    __tablename__ = "product_categories"
+    __tablename__ = 'product_categories'
     id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)
     name = DB.Column(DB.String(84), nullable=False)
 
@@ -21,7 +21,7 @@ class Product_Categories(DB.Model):
 
 class Product_CategoriesSchema(MA.Schema):
     class Meta:
-        fields = ["id", "name"]
+        fields = ['id', 'name']
 
 
 product_category_share_schema = Product_CategoriesSchema()

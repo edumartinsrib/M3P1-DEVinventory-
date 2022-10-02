@@ -13,21 +13,24 @@ def login_user(email: str, password: str):
         user = User.query.filter_by(email=email).first()
 
         if not user or not user.validate_password(password):
-            return {"error": "Suas credenciais estão incorretas!", "status_code": 401}
+            return {
+                'error': 'Suas credenciais estão incorretas!',
+                'status_code': 401,
+            }
 
         user_dict = user_share_schema.dump(user)
 
         payload = {
-            "user_id": user.id,
-            "exp": datetime.now(tz=timezone.utc) + timedelta(days=1),
-            "roles": user_dict["roles"],
+            'user_id': user.id,
+            'exp': datetime.now(tz=timezone.utc) + timedelta(days=1),
+            'roles': user_dict['roles'],
         }
         token = generate_jwt(payload)
 
-        return {"token": token, "status_code": 200}
+        return {'token': token, 'status_code': 200}
 
     except Exception as e:
-        return {"error": f"{e}"}
+        return {'error': f'{e}'}
 
 
 def create_user(data, validate=True):
@@ -40,40 +43,43 @@ def create_user(data, validate=True):
 
         return result
     except Exception as e:
-        return {"error": f"{e}"}
+        return {'error': f'{e}'}
 
 
 def update_user(data, id):
     list_keys = [
-        "role_id",
-        "gender_id",
-        "city_id",
-        "age",
-        "name",
-        "email",
-        "phone",
-        "password",
-        "cep",
-        "street",
-        "district",
-        "number_street",
-        "complement",
-        "landmark",
+        'role_id',
+        'gender_id',
+        'city_id',
+        'age',
+        'name',
+        'email',
+        'phone',
+        'password',
+        'cep',
+        'street',
+        'district',
+        'number_street',
+        'complement',
+        'landmark',
     ]
     try:
         user = User.query.get(id)
         if not user:
-            return {"error": "Usuário não encontrado!", "status_code": 404}
+            return {'error': 'Usuário não encontrado!', 'status_code': 404}
         validate_values_keys = validate_fields_nulls(data, list_keys)
-        if validate_values_keys is not None and "error" in validate_values_keys:
-            return {"error": validate_values_keys["error"], "status_code": 400}
+        if (
+            validate_values_keys is not None
+            and 'error' in validate_values_keys
+        ):
+            return {'error': validate_values_keys['error'], 'status_code': 400}
 
         user_create_schema.load(data, partial=True)
         user.update(data)
         result = user_share_schema.dump(user)
         return result
     except Exception as e:
-        return {"error": f"{e}"}
+        return {'error': f'{e}'}
 
 
 def get_user_by_email(email):
@@ -82,7 +88,7 @@ def get_user_by_email(email):
         result = user_share_schema.dump(user_query)
         return result
     except Exception as e:
-        return {"error": f"{e}"}
+        return {'error': f'{e}'}
 
 
 def get_user_by_id(id):
@@ -90,11 +96,11 @@ def get_user_by_id(id):
         user = User.query.get(id)
         return user
     except:
-        return {"error": "Algo deu errado!", "status_code": 404}
+        return {'error': 'Algo deu errado!', 'status_code': 404}
 
 
 def update_user_by_id(user, request_json):
-    user = get_user_by_id(user["id"])
+    user = get_user_by_id(user['id'])
     user.update(request_json)
 
 
@@ -103,38 +109,46 @@ def validate_fields_nulls(request_json, list_keys):
 
     if not request_json:
         return {
-            "error": "Não é possivel realizar operação, não há campos não preenchidos"
+            'error': 'Não é possivel realizar operação, não há campos não preenchidos'
         }
     for key in request_json:
         if key not in list_keys:
-            return {f"error": f"Campo '{key}' não existe ou não pode ser alterado"}
-        if request_json[key] == "" and list_keys[key] != None and list_keys[key] != "":
-            return {f"error": f"Campo '{key}' não pode ser alterado para nulo"}
+            return {
+                f'error': f"Campo '{key}' não existe ou não pode ser alterado"
+            }
+        if (
+            request_json[key] == ''
+            and list_keys[key] != None
+            and list_keys[key] != ''
+        ):
+            return {f'error': f"Campo '{key}' não pode ser alterado para nulo"}
 
 
 def format_print_user(self):
-    id = self["role_id"]
+    id = self['role_id']
     roles = Role.query.filter_by(id=id).first_or_404()
     role = role_share_schema.dump(roles)
 
     return {
-        "id": self["id"],
-        "name": self["name"],
-        "email": self["email"],
-        "phone": self["phone"],
-        "role": role["name"],
+        'id': self['id'],
+        'name': self['name'],
+        'email': self['email'],
+        'phone': self['phone'],
+        'role': role['name'],
     }
 
 
 def create_role(data):
     try:
         user_validate_schema.load(data)
-        roles = Permission.query.filter(Permission.id.in_(data["permissions"])).all()
+        roles = Permission.query.filter(
+            Permission.id.in_(data['permissions'])
+        ).all()
         results = []
-        new_role = Role.seed(data["name"], data["description"], roles)
+        new_role = Role.seed(data['name'], data['description'], roles)
         result = role_share_schema.dump(new_role)
         results.append(result)
 
-        return {"status": "sucesso", "roles": results}
+        return {'status': 'sucesso', 'roles': results}
     except Exception as e:
-        return {"error": f"{e}"}
+        return {'error': f'{e}'}

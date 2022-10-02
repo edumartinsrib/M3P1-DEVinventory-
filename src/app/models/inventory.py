@@ -1,13 +1,15 @@
 from datetime import datetime
 
 from src.app import DB, MA
-from src.app.models.product_categories import (Product_Categories,
-                                               product_category_share_schema)
+from src.app.models.product_categories import (
+    Product_Categories,
+    product_category_share_schema,
+)
 from src.app.models.user import User, user_share_schema
 
 
 class Inventory(DB.Model):
-    __tablename__ = "inventories"
+    __tablename__ = 'inventories'
     id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)
     product_category_id = DB.Column(
         DB.Integer, DB.ForeignKey(Product_Categories.id), nullable=False
@@ -21,9 +23,9 @@ class Inventory(DB.Model):
     value = DB.Column(DB.Float, nullable=False)
 
     product_category = DB.relationship(
-        "Product_Categories", foreign_keys=[product_category_id]
+        'Product_Categories', foreign_keys=[product_category_id]
     )
-    user = DB.relationship("User", foreign_keys=[user_id])
+    user = DB.relationship('User', foreign_keys=[user_id])
 
     @classmethod
     def seed(cls, data):
@@ -40,7 +42,7 @@ class Inventory(DB.Model):
             self.save()
             return self
         except Exception:
-            return {"error": "Erro ao atualizar o produto"}
+            return {'error': 'Erro ao atualizar o produto'}
 
     def save(self):
         DB.session.add(self)
@@ -48,29 +50,29 @@ class Inventory(DB.Model):
 
     def format(self):
         return {
-            "id": self.id,
-            "product_code": self.product_code,
-            "title": self.title,
-            "product_category": self.product_category.name,
-            "user": {
-                "name": self.user.name if self.user else "Na empresa",
-                "id": self.user.id if self.user else None,
+            'id': self.id,
+            'product_code': self.product_code,
+            'title': self.title,
+            'product_category': self.product_category.name,
+            'user': {
+                'name': self.user.name if self.user else 'Na empresa',
+                'id': self.user.id if self.user else None,
             },
-    }
-        
+        }
+
     def format_data_return(self):
         return {
-            "id": self.id,
-            "product_code": self.product_code,
-            "title": self.title,
-            "brand": self.brand,
-            "template": self.template,
-            "description": self.description,
-            "value": self.value,
-            "product_category": self.product_category.name,
-            "user": {
-                "name": self.user.name if self.user else "Na empresa",
-                "id": self.user.id if self.user else None,
+            'id': self.id,
+            'product_code': self.product_code,
+            'title': self.title,
+            'brand': self.brand,
+            'template': self.template,
+            'description': self.description,
+            'value': self.value,
+            'product_category': self.product_category.name,
+            'user': {
+                'name': self.user.name if self.user else 'Na empresa',
+                'id': self.user.id if self.user else None,
             },
         }
 
@@ -81,15 +83,15 @@ class InventorySchema(MA.Schema):
 
     class Meta:
         fields = (
-            "id",
-            "product_category_id",
-            "user_id",
-            "title",
-            "product_code",
-            "value",
-            "brand",
-            "template",
-            "description",
+            'id',
+            'product_category_id',
+            'user_id',
+            'title',
+            'product_code',
+            'value',
+            'brand',
+            'template',
+            'description',
         )
 
 
