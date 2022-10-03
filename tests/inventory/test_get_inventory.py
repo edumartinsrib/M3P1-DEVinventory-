@@ -39,6 +39,21 @@ def test_get_inventory_results_success_status_200(client, logged_in_client):
         assert response.json['quantidade de produtos'] >= 0
         assert response.json['valor total de itens'] != ''
 
+def test_get_inventory_results_fail_without_permission(client, logged_in_client_with_user_write):
+    """Test of the user route with a name that exists in the database"""
+    url = '/inventory/results'
+    response = client.get(url, headers=headers(logged_in_client_with_user_write))
+    
+    assert response.status_code == 403
+
+def test_get_inventory_results_fail_with_invalid_token(client, logged_in_client):
+    """Test of the user route with an invalid token"""
+    response = client.get(
+        '/inventory/results', headers=headers(f'{logged_in_client}123')
+    )
+    
+    assert response.status_code == 403
+
 
 def test_get_inventory_success_with_name_filter(client, logged_in_client):
     """Test of the user route with a name that exists in the database"""
