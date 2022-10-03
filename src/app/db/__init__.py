@@ -2,20 +2,18 @@ from json import loads
 from random import randint
 
 import requests
-from sqlalchemy.sql.expression import func
 
-from src.app.models.city import City, cities_share_schema
+from src.app.models.city import City
 from src.app.models.country import Country, country_share_schema
-from src.app.models.gender import Gender, genders_share_schema
-from src.app.models.inventory import Inventory, inventories_share_schema
-from src.app.models.permission import Permission, permissions_share_schema
+from src.app.models.gender import Gender
+from src.app.models.inventory import Inventory
+from src.app.models.permission import Permission
 from src.app.models.product_categories import (
-    Product_Categories,
-    product_categories_share_schema,
+    Product_Categories
 )
-from src.app.models.role import Role, roles_share_schema
+from src.app.models.role import Role
 from src.app.models.state import State, states_share_schema
-from src.app.models.user import User, users_share_schema
+from src.app.models.user import User
 from src.app.utils import is_table_empty, random_or_none
 
 users = [
@@ -44,7 +42,7 @@ users = [
         'email': 'ana@email.com',
         'phone': '48998889866',
         'password': 'Xyzw#123',
-        'cep': 881150989,
+        'cep': 88115098,
         'street': 'Borges street',
         'district': 'Centro',
         'complement': None,
@@ -187,14 +185,14 @@ def populate_db_role():
         {
             'role': 'be',
             'permissions': Permission.query.filter(
-                Permission.description.in_(['READ', 'WRITE'])
+                Permission.description.in_(['WRITE'])
             ).all(),
         },
         {
             'role': 'coord',
             'permissions': Permission.query.filter(
                 Permission.description.in_(
-                    ['READ', 'WRITE', 'UPDATE', 'PATCH']
+                    ['READ', 'WRITE', 'UPDATE', 'DELETE']
                 )
             ).all(),
         },
