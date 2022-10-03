@@ -2,7 +2,7 @@ import json
 import os
 
 import requests
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, abort, current_app, jsonify, request
 from flask.globals import session
 from flask.wrappers import Response
 from google import auth
@@ -10,17 +10,12 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from werkzeug.utils import redirect
 
-from src.app import DB, MA
 from src.app.middlewares.auth import logged_in, requires_access_level
 from src.app.models.user import User, users_share_schema
-from src.app.services.users_service import (
-    create_role,
-    create_user,
-    format_print_user,
-    get_user_by_email,
-    login_user,
-    update_user,
-)
+from src.app.services.users_service import (create_role, create_user,
+                                            format_print_user,
+                                            get_user_by_email, login_user,
+                                            update_user)
 from src.app.utils import exist_key, generate_jwt
 
 user = Blueprint('user', __name__, url_prefix='/user')
@@ -167,15 +162,20 @@ def get_user_by_name():
 @user.route('/<int:id>', methods=['PATCH'])
 @requires_access_level(['UPDATE'])
 def update_user_by_id(id):
+    if id is None or id == 0 or not request.json:
+        abort(400)
+    user = User.query.get(id)
+    if user is None:
+        return {'error': 'Usuário não encontrado!'}, 404
+    
     data = request.get_json()
 
-    response = update_user(data, id)
+    response = update_user(data, user)
 
     if 'error' in response:
-        return jsonify(response), response.get('status_code')
+        return json.dumps(response), 400
 
-    return jsonify(response), 204
-
+    return json.dumps(response), 204
 
 @user.route('/role', methods=['POST'])
 @requires_access_level(['READ', 'WRITE', 'UPDATE', 'DELETE'])

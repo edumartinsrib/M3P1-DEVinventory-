@@ -72,13 +72,13 @@ def test_patch_user_fail_with_email_registered(client, logged_in_client):
     )
 
     if response.status_code == 400 and response.json:
-        assert response.json['error'] == "{'email': ['Email já registrado']}"
+        assert 'Email já registrado' in response.json['error']
 
 
 def test_patch_user_fail_without_permission(
     client, logged_in_client_with_user_read
 ):
-    """Test of the post user route with a valid token"""
+    """Test of the post user route without permission"""
     payload_test = payload.copy()
     payload_test['email'] = 'joao@email.com'
     response = client.patch(
@@ -89,3 +89,52 @@ def test_patch_user_fail_without_permission(
 
     if response.status_code == 403 and response.json:
         assert 'Você não tem permissão' in response.json['error']
+
+def test_patch_user_with_invalid_types_payload_email(client, logged_in_client):
+    """Test of the patch user route with a invalid payload email"""
+    user = 1
+    payload_test = {
+        "email": "invalid",
+    }
+    response = client.patch(
+        f'/user/{user}', headers=headers(logged_in_client), json=payload_test
+    )
+
+    assert response.status_code == 400
+    
+def test_patch_user_with_invalid_types_payload_password(client, logged_in_client):
+    """Test of the patch user route with a invalid password"""
+    user = 2
+    payload_test = {
+        "password": 123,
+    }
+
+    response = client.patch(
+        f'/user/{user}', headers=headers(logged_in_client), json=payload_test
+    )
+    assert response.status_code == 400
+
+
+def test_patch_user_with_invalid_types_payload_numbers(client, logged_in_client):
+    """Test of the patch user route with a invalid payload fields numbers"""
+    user = 2
+    payload_test = []
+    for keys, values in payload.items():
+        if isinstance(values, int) and keys != 'id':
+            payload_test.append({keys: 'invalid'})
+ 
+    response = client.patch(f'/user/{user}', headers=headers(logged_in_client), json=payload_test)    
+    assert response.status_code == 400
+
+
+def test_patch_user_fail_with_invalid_payload_phone(client, logged_in_client):
+    """Test of the patch user route with a invalid payload phone"""
+    user = 2
+    payload_test = {
+        "phone": "invalid",
+    }
+
+    response = client.patch(
+        f'/user/{user}', headers=headers(logged_in_client), json=payload_test
+    )
+    assert response.status_code == 400

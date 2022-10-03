@@ -65,6 +65,8 @@ class UserCreateSchema(Schema):
     def validate_email(self, value):
         if User.query.filter_by(email=value).first():
             raise ValidationError('Email já registrado')
+        elif re.match(r'[^@]+@[^@]+\.[^@]+', value) is None:
+            raise ValidationError('Email inválido')
 
     @validates('phone')
     def validate_phone(self, value):

@@ -46,34 +46,8 @@ def create_user(data, validate=True):
         return {'error': f'{e}'}
 
 
-def update_user(data, id):
-    list_keys = [
-        'role_id',
-        'gender_id',
-        'city_id',
-        'age',
-        'name',
-        'email',
-        'phone',
-        'password',
-        'cep',
-        'street',
-        'district',
-        'number_street',
-        'complement',
-        'landmark',
-    ]
+def update_user(data, user):
     try:
-        user = User.query.get(id)
-        if not user:
-            return {'error': 'Usuário não encontrado!', 'status_code': 404}
-        validate_values_keys = validate_fields_nulls(data, list_keys)
-        if (
-            validate_values_keys is not None
-            and 'error' in validate_values_keys
-        ):
-            return {'error': validate_values_keys['error'], 'status_code': 400}
-
         user_create_schema.load(data, partial=True)
         user.update(data)
         result = user_share_schema.dump(user)
