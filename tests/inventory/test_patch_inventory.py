@@ -49,7 +49,7 @@ def test_patch_inventory_fail_without_permission(
 
 def test_patch_inventory_fail_without_payload(client, logged_in_client):
     """Test of the user route with a valid token"""
-    response = client.post(
+    response = client.patch(
         configs['url_base'], json={}, headers=headers(logged_in_client)
     )
 
