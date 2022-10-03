@@ -20,6 +20,12 @@ def test_get_inventory_fail_with_invalid_token(client, logged_in_client):
 
     assert response.status_code == 403
 
+def test_get_inventory_fail_user_without_permission(client, logged_in_client_with_user_write):
+    """Test of the user fail with user without permission"""
+    url = '/inventory/?page=1'
+    response = client.get(url, headers=headers(logged_in_client_with_user_write))
+
+    assert response.status_code == 403
 
 def test_get_inventory_results_success_status_200(client, logged_in_client):
     """Test of the user route with a valid token without parameter name"""
