@@ -141,6 +141,8 @@ def get_user_by_name():
     if not request.args.get('name'):
         users = users_share_schema.dump(pager.items)
         result = [format_print_user(result) for result in users]
+        if not result:
+            return json.dumps({'message': 'Nenhum usuário encontrado'}), 204
 
         return jsonify({'Status': 'Sucesso', 'Dados': result}), 200
 
